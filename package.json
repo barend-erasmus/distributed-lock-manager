@@ -1,0 +1,28 @@
+{
+  "name": "distributed-lock-manager",
+  "version": "1.0.0",
+  "description": "A distributed lock manager (DLM) runs in every machine in a cluster, with an identical copy of a cluster-wide lock database.",
+  "main": "gulpfile.js",
+  "scripts": {
+    "build": "gulp build & tsc",
+    "debug": "npm run build & node --inspect ./dist/app.js --dev",
+    "lint": "tslint ./src/**/*.ts --fix --exclude ./src/**/*.d.ts",
+    "start": "npm run build & node ./dist/app.js --dev",
+    "test": "npm run build & mocha --timeout 30000 ./dist/**/*.test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/barend-erasmus/distributed-lock-manager.git"
+  },
+  "author": "Barend Erasmus",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/barend-erasmus/distributed-lock-manager/issues"
+  },
+  "homepage": "https://github.com/barend-erasmus/distributed-lock-manager#readme",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-clean": "^0.4.0",
+    "run-sequence": "^2.2.1"
+  }
+}
