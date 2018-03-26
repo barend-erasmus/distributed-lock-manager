@@ -1,6 +1,6 @@
 {
   "name": "distributed-lock-manager",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "A distributed lock manager (DLM) runs in every machine in a cluster, with an identical copy of a cluster-wide lock database.",
   "main": "gulpfile.js",
   "scripts": {
