@@ -36,6 +36,9 @@ export class HTTPDLMServer extends DLMServer {
                     this.handleCommand(parsedCommand.action, parsedCommand.parameters).then((result: string) => {
                         response.write(result);
                         response.end();
+                    }).catch((err) => {
+                        response.write('ERROR');
+                        response.end();
                     });
 
                     command = [];
@@ -46,8 +49,6 @@ export class HTTPDLMServer extends DLMServer {
             }
 
             socketBuffer = Buffer.from(command);
-        }).on('end', () => {
-
         });
     }
 

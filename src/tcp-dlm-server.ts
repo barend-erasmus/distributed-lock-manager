@@ -35,6 +35,8 @@ export class TCPDLMServer extends DLMServer {
 
                     this.handleCommand(parsedCommand.action, parsedCommand.parameters).then((result: string) => {
                         socket.write(result);
+                    }).catch((err) => {
+                        socket.write('ERROR');
                     });
 
                     command = [];
