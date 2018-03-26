@@ -20,6 +20,10 @@ export class TCPDLMServer extends DLMServer {
     public handleSocket(socket: net.Socket): void {
         let socketBuffer: Buffer = null;
 
+        socket.on('error', (err: Error) => {
+
+        });
+
         socket.on('data', (data: Buffer) => {
             socketBuffer = socketBuffer ? Buffer.concat([socketBuffer, data]) : data;
 

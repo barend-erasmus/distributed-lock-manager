@@ -15,6 +15,10 @@ export class HTTPDLMServer extends DLMServer {
         super(logFn, maximumWaitForAcquireInMilliseconds, timeoutInMiliseconds);
 
         this.server = http.createServer((request: http.IncomingMessage, response: http.ServerResponse) => this.handleRequest(request, response));
+
+        this.server.on('clientError', (err: Error) => {
+
+        });
     }
 
     public handleRequest(request: http.IncomingMessage, response: http.ServerResponse): void {
