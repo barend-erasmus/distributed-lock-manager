@@ -4,17 +4,16 @@ export class DistributedLockManager {
 
     private static instances: {} = {};
 
-    private maxWaitForAcquire: number = 1000;
-
     private state: State = State.Unlocked;
 
     private timestamp: Date = null;
 
     constructor(
-        private name: string,
+        private maximumWaitForAcquireInMilliseconds: number,
+        public name: string,
         private timeoutInMilliseconds: number,
     ) {
-        this.maxWaitForAcquire = timeoutInMilliseconds * 3;
+
     }
 
     public acquire(): boolean {
@@ -37,14 +36,14 @@ export class DistributedLockManager {
         return false;
     }
 
-    public static getInstance(name: string, timeoutInMilliseconds: number): DistributedLockManager {
+    public static getInstance(maximumWaitForAcquireInMilliseconds: number, name: string, timeoutInMilliseconds: number): DistributedLockManager {
         let instance: DistributedLockManager = DistributedLockManager.instances[name];
 
         if (instance) {
             return instance;
         }
 
-        instance = new DistributedLockManager(name, timeoutInMilliseconds);
+        instance = new DistributedLockManager(maximumWaitForAcquireInMilliseconds, name, timeoutInMilliseconds);
 
         DistributedLockManager.instances[name] = instance;
 
@@ -61,7 +60,7 @@ export class DistributedLockManager {
     public async waitAcquire(): Promise<boolean> {
         const delayMilliseconds: number = 100;
 
-        for (let count: number = 0; count < this.maxWaitForAcquire / delayMilliseconds; count ++) {
+        for (let count: number = 0; count < this.maximumWaitForAcquireInMilliseconds / delayMilliseconds; count ++) {
             const result: boolean = await this.acquire();
 
             if (result) {

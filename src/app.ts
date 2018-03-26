@@ -1,69 +1,28 @@
-import * as net from 'net';
-import { DistributedLockManager } from './distributed-lock-manager';
+import chalk from 'chalk';
+import * as yargs from 'yargs';
 
-function handleSocket(socket: net.Socket): void {
-    let socketBuffer: Buffer = null;
+import { HTTPDLMServer } from './http-dlm-server';
+import { TCPDLMServer } from './tcp-dlm-server';
 
-    socket.on('data', (data: Buffer) => {
-        socketBuffer = socketBuffer ? Buffer.concat([socketBuffer, data]) : data;
-
-        let command: number[] = [];
-
-        for (const char of socketBuffer) {
-            if (!char) {
-                continue;
-            }
-
-            if (char === 10) {
-                handleCommand(command, socket).then(() => { });
-
-                command = [];
-                continue;
-            }
-
-            command.push(char);
-        }
-
-        socketBuffer = Buffer.from(command);
-    });
+function logFn(message: string): void {
+    console.log(chalk.magenta(message));
 }
 
-async function handleCommand(command: number[], socket: net.Socket): Promise<void> {
-    command = command.filter((x) => x !== 10 && x !== 13);
+const argv = yargs.argv;
 
-    const commandString: string = String.fromCharCode.apply(null, command);
+const httpPort: number = argv.httpPort || 5000;
+const maximumWaitForAcquireInMilliseconds: number = argv.maximumWaitForAcquireInMilliseconds || 2000;
+const tcpPort: number = argv.tcpPort || 5001;
+const timeoutInMiliseconds: number = argv.timeoutInMiliseconds || 5000;
 
-    const splittedCommandString: string[] = commandString.split(' ');
+const httpDLMServer: HTTPDLMServer = new HTTPDLMServer(logFn, maximumWaitForAcquireInMilliseconds, httpPort, timeoutInMiliseconds);
+const tcpDLMServer: TCPDLMServer = new TCPDLMServer(logFn, maximumWaitForAcquireInMilliseconds, tcpPort, timeoutInMiliseconds);
 
-    const action: string = splittedCommandString[0];
+httpDLMServer.listen();
+tcpDLMServer.listen();
 
-    const parameters: string[] = splittedCommandString.slice(1);
-
-    const distributedLockManager: DistributedLockManager = DistributedLockManager.getInstance(parameters[0], 1000);
-
-    if (action === 'acquire') {
-        // acquire <name>
-        const result: boolean = distributedLockManager.acquire();
-
-        socket.write(result ? 'TRUE\r\n' : 'FALSE\r\n');
-    } else if (action === 'release') {
-        // release <name>
-
-        distributedLockManager.release();
-
-        socket.write('OK\r\n');
-    } else if (action === 'waitAcquire') {
-        // waitAcquire <name>
-        const result: boolean = await distributedLockManager.waitAcquire();
-
-        socket.write(result ? 'TRUE\r\n' : 'FALSE\r\n');
-    } else {
-        socket.write('Invalid Command\r\n');
-    }
-}
-
-net.createServer(handleSocket).listen(5000);
-
-const port: number = 5000;
-
-console.log(`listening on ${port}`);
+console.log(chalk.blue(`Distributed Lock Manager Configuration:`));
+console.log(chalk.blue(`    Maximum Wait for Acquire in Milliseconds: ${maximumWaitForAcquireInMilliseconds} milliseconds`));
+console.log(chalk.blue(`    Timeout in Miliseconds: ${timeoutInMiliseconds} milliseconds`));
+console.log(chalk.green(`listening on port ${httpPort} for HTTP traffic`));
+console.log(chalk.green(`listening on port ${tcpPort} for TCP traffic`));

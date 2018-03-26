@@ -25,5 +25,13 @@
     "gulp": "^3.9.1",
     "gulp-clean": "^0.4.0",
     "run-sequence": "^2.2.1"
+  },
+  "bin": {
+    "distributed-lock-manager": "./bin/distributed-lock-manager",
+    "dlm-server": "./bin/distributed-lock-manager"
+  },
+  "dependencies": {
+    "chalk": "^2.3.2",
+    "yargs": "^11.0.0"
   }
 }
