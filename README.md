@@ -20,7 +20,7 @@ The DLM maintains a list of system resources and provides locking mechanisms to 
 
 This command will try to acquire the lock for the given name and return `TRUE<newline>` when successfully acquired and `FALSE<newline>` when not acquired.
 
-`aquire <name><newline>`
+`acquire <name><newline>`
 
 ### Release
 
