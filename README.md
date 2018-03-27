@@ -36,7 +36,8 @@ This command is exactly the same as the `acquire` command except that it will wa
 
 ## Client Libraries
 
-* [DistributedLockManager.NET](https://www.nuget.org/packages/DistributedLockManager.NET)
+* [DistributedLockManager.NET](https://www.nuget.org/packages/DistributedLockManager.NET) (.NET Core)
+* [distributed-lock-manager-node](https://github.com/barend-erasmus/distributed-lock-manager-node) (node.js)
 
 ## Performance
 

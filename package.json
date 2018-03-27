@@ -1,6 +1,6 @@
 {
   "name": "distributed-lock-manager",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "The DLM maintains a list of system resources and provides locking mechanisms to control allocation and modification of resources.",
   "scripts": {
     "build": "gulp build & tsc",
